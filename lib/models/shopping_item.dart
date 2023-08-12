@@ -5,16 +5,20 @@ const uuid = Uuid();
 class ShoppingItem {
   ShoppingItem({
     this.title = 'Product',
-    required this.price,
-    this.quantity = 1,
+    this.price = 0.0,
+    this.quantity = 1.0,
     this.isSummed = true,
     this.isBought = true,
   }) : id = uuid.v4();
 
   final String id;
-  final String title;
+  String title;
   double price;
   double quantity;
   bool isSummed;
   bool isBought;
+
+  double get total {
+    return price * quantity;
+  }
 }
