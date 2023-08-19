@@ -1,4 +1,4 @@
-import 'package:es_calc/providers/shopping_item_provider.dart';
+import 'package:es_calc/providers/shopping_list_provider.dart';
 import 'package:es_calc/ui/widgets/item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

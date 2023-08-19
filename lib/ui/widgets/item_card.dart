@@ -1,5 +1,5 @@
 import 'package:es_calc/models/shopping_item.dart';
-import 'package:es_calc/providers/shopping_item_provider.dart';
+import 'package:es_calc/providers/shopping_list_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,10 +29,8 @@ class ItemCard extends ConsumerWidget {
           leading: Checkbox(
             value: item.isBought,
             onChanged: (value) {
-              final newValue = item.copyWith(
-                isBought: value,
-              );
-              stateNotifier.updateItem(newValue);
+              item.isBought = value!;
+              stateNotifier.updateItem(item);
             },
           ),
           title: Text(item.title),

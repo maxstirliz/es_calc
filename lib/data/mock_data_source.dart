@@ -1,8 +1,8 @@
-import 'package:es_calc/data/item_data_source.dart';
+import 'package:es_calc/data/shopping_list_data_source.dart';
 import 'package:es_calc/models/shopping_item.dart';
 
-class MockDataSrouce implements ItemDataSource {
-  List<ShoppingItem> shoppingItems = [
+class MockDataSrouce implements ShoppingListDataSource {
+  List<ShoppingItem> shoppingList = [
     ShoppingItem(
       title: 'Juice Box',
       quantity: 10,
@@ -35,28 +35,31 @@ class MockDataSrouce implements ItemDataSource {
 
   @override
   Future<List<ShoppingItem>> getItems() async {
-    return shoppingItems;
+    return shoppingList;
   }
 
   @override
-  Future<void> addItem(ShoppingItem item) async {
-    shoppingItems.add(item);
+  Future<List<ShoppingItem>> addItem(ShoppingItem item) async {
+    shoppingList.add(item);
+    return shoppingList;
   }
 
   @override
-  Future<void> updateItem(ShoppingItem item) async {
-    final itemIndex = shoppingItems.indexWhere((e) => e.id == item.id);
+  Future<List<ShoppingItem>> updateItem(ShoppingItem item) async {
+    final itemIndex = shoppingList.indexWhere((e) => e.id == item.id);
     if (itemIndex != -1) {
-      shoppingItems[itemIndex].title = item.title;
-      shoppingItems[itemIndex].price = item.price;
-      shoppingItems[itemIndex].quantity = item.quantity;
-      shoppingItems[itemIndex].isSummed = item.isSummed;
-      shoppingItems[itemIndex].isBought = item.isBought;
+      shoppingList[itemIndex].title = item.title;
+      shoppingList[itemIndex].price = item.price;
+      shoppingList[itemIndex].quantity = item.quantity;
+      shoppingList[itemIndex].isSummed = item.isSummed;
+      shoppingList[itemIndex].isBought = item.isBought;
     }
+    return shoppingList;
   }
 
   @override
-  Future<void> deleteItem(String id) async {
-    shoppingItems.removeWhere((e) => e.id == id);
+  Future<List<ShoppingItem>> deleteItem(String id) async {
+    shoppingList.removeWhere((e) => e.id == id);
+    return shoppingList;
   }
 }
