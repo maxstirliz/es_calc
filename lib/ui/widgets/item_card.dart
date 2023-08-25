@@ -14,7 +14,7 @@ class ItemCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final stateNotifier = ref.watch(shoppingItemProvider.notifier);
+    final stateNotifier = ref.watch(shoppingListProvider.notifier);
 
     void toggleBoughtIcon(ShoppingItem item) {
       item.isBought = !item.isBought;
@@ -26,57 +26,54 @@ class ItemCard extends ConsumerWidget {
       onDismissed: (direction) {
         stateNotifier.deleteItem(item.id);
       },
-      child: Hero(
-        tag: item.id,
-        child: Card(
-          elevation: 1,
-          margin: const EdgeInsets.symmetric(
-            vertical: 4,
-            horizontal: 4,
-          ),
-          color: Colors.grey[100],
-          child: ListTile(
-            leading: IconButton(
-              onPressed: () => toggleBoughtIcon(item),
-              icon: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 250),
-                child: item.isBought
-                    ? Container(
-                        key: const ValueKey('included'),
-                        child: const Icon(
-                          Icons.shopping_cart,
-                          color: Colors.green,
-                        ),
-                      )
-                    : Container(
-                        key: const ValueKey('not included'),
-                        child: const Icon(
-                          Icons.add,
-                          color: Colors.grey,
-                        ),
+      child: Card(
+        elevation: 1,
+        margin: const EdgeInsets.symmetric(
+          vertical: 4,
+          horizontal: 4,
+        ),
+        color: Colors.grey[100],
+        child: ListTile(
+          leading: IconButton(
+            onPressed: () => toggleBoughtIcon(item),
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 250),
+              child: item.isBought
+                  ? Container(
+                      key: const ValueKey('included'),
+                      child: const Icon(
+                        Icons.shopping_cart,
+                        color: Colors.green,
                       ),
-              ),
+                    )
+                  : Container(
+                      key: const ValueKey('not included'),
+                      child: const Icon(
+                        Icons.add,
+                        color: Colors.grey,
+                      ),
+                    ),
             ),
-            trailing: IconButton(
-              icon: const Icon(
-                Icons.edit_document,
-                color: Colors.blueGrey,
-              ),
-              onPressed: () async {
-                final ShoppingItem updatedItem = await showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) {
-                      return ItemEditDialog(
-                        item: item,
-                      );
-                    });
-                stateNotifier.updateItem(updatedItem);
-              },
-            ),
-            title: Text(item.title),
-            subtitle: Text('${item.price} x ${item.quantity} = ${item.total}'),
           ),
+          trailing: IconButton(
+            icon: const Icon(
+              Icons.edit,
+              color: Colors.blueGrey,
+            ),
+            onPressed: () async {
+              final ShoppingItem updatedItem = await showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) {
+                    return ItemEditDialog(
+                      item: item,
+                    );
+                  });
+              stateNotifier.updateItem(updatedItem);
+            },
+          ),
+          title: Text(item.title),
+          subtitle: Text('${item.price} x ${item.quantity} = ${item.total}'),
         ),
       ),
     );

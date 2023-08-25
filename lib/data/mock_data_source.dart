@@ -1,7 +1,7 @@
 import 'package:es_calc/data/shopping_list_data_source.dart';
 import 'package:es_calc/models/shopping_item.dart';
 
-class MockDataSrouce implements ShoppingListDataSource {
+class MockDataSource implements ShoppingListDataSource {
   List<ShoppingItem> shoppingList = [
     ShoppingItem(
       title: 'Juice Box',

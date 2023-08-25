@@ -18,13 +18,13 @@ class _ShoppingListScreenState extends ConsumerState<ShoppingListScreen> {
 
   @override
   void initState() {
-    _itemsFuture = ref.read(shoppingItemProvider.notifier).loadItems();
+    _itemsFuture = ref.read(shoppingListProvider.notifier).loadItems();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final shoppingItems = ref.watch(shoppingItemProvider);
+    final shoppingItems = ref.watch(shoppingListProvider);
 
     return Scaffold(
       appBar: AppBar(
