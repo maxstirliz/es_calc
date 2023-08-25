@@ -11,9 +11,13 @@ class EasySoppingCalculator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Easy Shopping Calculator',
-      home: ShoppingListScreen(),
+    return MaterialApp(
+      theme: ThemeData(
+        colorSchemeSeed: const Color.fromARGB(255, 47, 128, 58),
+        useMaterial3: true,
+      ),
+      title: 'ESCalc',
+      home: const ShoppingListScreen(),
     );
   }
 }

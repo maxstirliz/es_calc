@@ -28,7 +28,7 @@ class _ShoppingListScreenState extends ConsumerState<ShoppingListScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Shopping List'),
+        title: const Text('Easy Shopping Calculator'),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(

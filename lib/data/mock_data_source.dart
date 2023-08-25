@@ -8,28 +8,24 @@ class MockDataSrouce implements ShoppingListDataSource {
       quantity: 10,
       price: 21,
       isBought: true,
-      isSummed: true,
     ),
     ShoppingItem(
       title: 'Bread',
       quantity: 1,
       price: 35,
       isBought: true,
-      isSummed: true,
     ),
     ShoppingItem(
       title: 'Condenced Milk',
       quantity: 3,
       price: 56,
       isBought: true,
-      isSummed: true,
     ),
     ShoppingItem(
       title: 'Ice Cream',
       quantity: 1,
       price: 98,
       isBought: true,
-      isSummed: true,
     ),
   ];
 
@@ -51,7 +47,6 @@ class MockDataSrouce implements ShoppingListDataSource {
       shoppingList[itemIndex].title = item.title;
       shoppingList[itemIndex].price = item.price;
       shoppingList[itemIndex].quantity = item.quantity;
-      shoppingList[itemIndex].isSummed = item.isSummed;
       shoppingList[itemIndex].isBought = item.isBought;
     }
     return shoppingList;
