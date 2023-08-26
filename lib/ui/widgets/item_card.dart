@@ -42,7 +42,7 @@ class ItemCard extends ConsumerWidget {
                   ? Container(
                       key: const ValueKey('included'),
                       child: const Icon(
-                        Icons.shopping_cart,
+                        Icons.check_circle,
                         color: Colors.green,
                       ),
                     )
@@ -50,7 +50,7 @@ class ItemCard extends ConsumerWidget {
                       key: const ValueKey('not included'),
                       child: const Icon(
                         Icons.add,
-                        color: Colors.grey,
+                        color: Colors.red,
                       ),
                     ),
             ),

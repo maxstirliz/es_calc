@@ -13,7 +13,7 @@ class EasySoppingCalculator extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        colorSchemeSeed: const Color.fromARGB(255, 47, 128, 58),
+        colorSchemeSeed: const Color.fromARGB(255, 0, 0, 255),
         useMaterial3: true,
       ),
       title: 'ESCalc',

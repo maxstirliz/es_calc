@@ -69,12 +69,17 @@ class _ItemEditDialogState extends State<ItemEditDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
-              maxLength: 20,
               maxLines: 1,
-              decoration: const InputDecoration(
-                labelText: 'Product name',
-              ),
+              maxLength: 20,
+              decoration: const InputDecoration(labelText: 'Product name'),
               initialValue: editedItem.title,
+              onChanged: (value) {
+                if (value == '' || value.trim() == '') {
+                  return;
+                }
+                editedItem.title = value;
+                _updateTotalPrice();
+              },
               validator: (value) => _validateTextInput(value!),
             ),
             const SizedBox(height: 10),

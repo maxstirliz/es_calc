@@ -2,10 +2,9 @@ import 'package:es_calc/models/shopping_item.dart';
 import 'package:es_calc/providers/shopping_list_provider.dart';
 import 'package:es_calc/ui/widgets/edit_item_dialog.dart';
 import 'package:es_calc/ui/widgets/item_card.dart';
+import 'package:es_calc/utils/shopping_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:es_calc/utils/shopping_calculator.dart';
-
 
 class ShoppingCartScreen extends ConsumerStatefulWidget {
   const ShoppingCartScreen({super.key});
@@ -18,6 +17,7 @@ class ShoppingCartScreen extends ConsumerStatefulWidget {
 
 class _ShoppingListScreenState extends ConsumerState<ShoppingCartScreen> {
   late Future<void> _itemsFuture;
+  int currentNavigationIndex = 0;
 
   @override
   void initState() {
@@ -59,9 +59,7 @@ class _ShoppingListScreenState extends ConsumerState<ShoppingCartScreen> {
             }),
       ),
       floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(40.0),
-        ),
+        backgroundColor: Colors.greenAccent,
         onPressed: () async {
           final updatedItem = await showDialog<ShoppingItem>(
               context: context,
@@ -79,34 +77,35 @@ class _ShoppingListScreenState extends ConsumerState<ShoppingCartScreen> {
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.yellowAccent,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 6,
-        height: 60,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.shopping_cart),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.edit_document),
-            ),
-            const SizedBox(width: 20),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.compare_arrows),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.settings),
-            ),
-          ],
-        ),
+      bottomNavigationBar: NavigationBar(
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        indicatorColor: Colors.lightBlueAccent,
+        selectedIndex: currentNavigationIndex,
+        backgroundColor: Colors.yellowAccent,
+        onDestinationSelected: (index) {
+          setState(() {
+            currentNavigationIndex = index;
+          });
+        },
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Cart',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.edit_document),
+            label: 'List',
+          ),
+          SizedBox(),
+          NavigationDestination(
+            icon: Icon(Icons.compare_arrows),
+            label: 'Compare',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
       ),
     );
   }
