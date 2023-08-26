@@ -1,6 +1,6 @@
 import 'package:es_calc/models/shopping_item.dart';
 import 'package:es_calc/providers/shopping_list_provider.dart';
-import 'package:es_calc/ui/widgets/item_edit_dialog.dart';
+import 'package:es_calc/ui/widgets/edit_item_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -61,15 +61,18 @@ class ItemCard extends ConsumerWidget {
               color: Colors.blueGrey,
             ),
             onPressed: () async {
-              final ShoppingItem updatedItem = await showDialog(
+              final updatedItem = await showDialog<ShoppingItem>(
                   context: context,
                   barrierDismissible: false,
                   builder: (context) {
                     return ItemEditDialog(
                       item: item,
+                      title: 'Edit Item',
                     );
                   });
-              stateNotifier.updateItem(updatedItem);
+              if (updatedItem != null) {
+                stateNotifier.updateItem(updatedItem);
+              }
             },
           ),
           title: Text(item.title),

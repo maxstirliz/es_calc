@@ -1,4 +1,4 @@
-import 'package:es_calc/ui/screens/shopping_list_screen.dart';
+import 'package:es_calc/ui/screens/shopping_cart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,7 +17,7 @@ class EasySoppingCalculator extends StatelessWidget {
         useMaterial3: true,
       ),
       title: 'ESCalc',
-      home: const ShoppingListScreen(),
+      home: const ShoppingCartScreen(),
     );
   }
 }

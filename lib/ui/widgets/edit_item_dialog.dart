@@ -4,9 +4,14 @@ import 'package:flutter/services.dart';
 import 'dart:math' as math;
 
 class ItemEditDialog extends StatefulWidget {
-  const ItemEditDialog({super.key, required this.item});
+  const ItemEditDialog({
+    super.key,
+    required this.item,
+    required this.title,
+  });
 
   final ShoppingItem item;
+  final String title;
 
   @override
   State<StatefulWidget> createState() {
@@ -54,7 +59,7 @@ class _ItemEditDialogState extends State<ItemEditDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        'Edit ${editedItem.title}',
+        widget.title,
         textAlign: TextAlign.center,
       ),
       content: Form(
