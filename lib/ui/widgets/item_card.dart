@@ -30,13 +30,10 @@ class ItemCard extends ConsumerWidget {
         child: ListTile(
           leading: item.isBought
               ? const Icon(
-                  Icons.check_circle,
+                  Icons.check,
                   color: Colors.green,
                 )
-              : const Icon(
-                  Icons.add,
-                  color: Colors.red,
-                ),
+              : null,
           title: Text(item.name),
           trailing: Text('x ${item.quantity}'),
         ),

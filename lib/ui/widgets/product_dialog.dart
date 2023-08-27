@@ -169,8 +169,8 @@ class _ProductDialogState extends State<ProductDialog> {
           child: const Text('Save'),
           onPressed: () {
             if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
               widget.item.updateValues(editedItem);
+              widget.item.isBought = true;
               Navigator.of(context).pop<ShoppingItem>(widget.item);
             }
           },

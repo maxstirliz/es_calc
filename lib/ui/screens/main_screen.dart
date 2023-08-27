@@ -5,6 +5,7 @@ import 'package:es_calc/ui/screens/compare_prices.dart';
 import 'package:es_calc/ui/screens/settings.dart';
 import 'package:es_calc/ui/screens/shopping_cart.dart';
 import 'package:es_calc/ui/screens/shopping_list.dart';
+import 'package:es_calc/ui/widgets/add_item_dialog.dart';
 import 'package:es_calc/ui/widgets/product_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,8 +28,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     Screen(
         screen: const ShoppingListScreen(), title: const Text('Shopping List')),
     null,
-    Screen(
-        screen: const CompareScreen(), title: const Text('Compare Prices')),
+    Screen(screen: const CompareScreen(), title: const Text('Compare Prices')),
     Screen(screen: const SettingsScreen(), title: const Text('Settings')),
   ];
 
@@ -47,17 +47,26 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               ? FloatingActionButton(
                   backgroundColor: Colors.greenAccent,
                   onPressed: () async {
-                    final updatedItem = await showDialog<ShoppingItem>(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context) {
-                          return ProductDialog(
-                            item: ShoppingItem(),
-                            title: 'Add Item',
-                          );
-                        });
-                    if (updatedItem != null) {
-                      stateNotifier.addItem(updatedItem);
+                    if (currentNavigationIndex == 0) {
+                      final updatedItem = await showDialog<ShoppingItem>(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) {
+                            return ProductDialog(
+                              item: ShoppingItem(),
+                              title: 'Add Product',
+                            );
+                          });
+                      if (updatedItem != null) {
+                        stateNotifier.addItem(updatedItem);
+                      }
+                    } else {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) {
+                            return const AddItemDialog();
+                          });
                     }
                   },
                   child: const Icon(Icons.add),

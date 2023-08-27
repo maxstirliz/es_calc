@@ -67,7 +67,7 @@ class ProductCard extends ConsumerWidget {
                   builder: (context) {
                     return ProductDialog(
                       item: item,
-                      title: 'Edit Item',
+                      title: 'Edit Product',
                     );
                   });
               if (updatedItem != null) {
