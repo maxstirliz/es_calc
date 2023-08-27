@@ -4,25 +4,25 @@ import 'package:es_calc/models/shopping_item.dart';
 class MockDataSource implements ShoppingListDataSource {
   List<ShoppingItem> shoppingList = [
     ShoppingItem(
-      title: 'Juice Box',
+      name: 'Juice Box',
       quantity: 10,
       price: 21,
       isBought: true,
     ),
     ShoppingItem(
-      title: 'Bread',
+      name: 'Bread',
       quantity: 1,
       price: 35,
       isBought: true,
     ),
     ShoppingItem(
-      title: 'Condenced Milk',
+      name: 'Condenced Milk',
       quantity: 3,
       price: 56,
       isBought: true,
     ),
     ShoppingItem(
-      title: 'Ice Cream',
+      name: 'Ice Cream',
       quantity: 1,
       price: 98,
       isBought: true,
@@ -44,7 +44,7 @@ class MockDataSource implements ShoppingListDataSource {
   Future<List<ShoppingItem>> updateItem(ShoppingItem item) async {
     final itemIndex = shoppingList.indexWhere((e) => e.id == item.id);
     if (itemIndex != -1) {
-      shoppingList[itemIndex].title = item.title;
+      shoppingList[itemIndex].name = item.name;
       shoppingList[itemIndex].price = item.price;
       shoppingList[itemIndex].quantity = item.quantity;
       shoppingList[itemIndex].isBought = item.isBought;

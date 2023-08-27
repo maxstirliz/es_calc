@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 
-class ItemEditDialog extends StatefulWidget {
-  const ItemEditDialog({
+class ProductDialog extends StatefulWidget {
+  const ProductDialog({
     super.key,
     required this.item,
     required this.title,
@@ -14,12 +14,12 @@ class ItemEditDialog extends StatefulWidget {
   final String title;
 
   @override
-  State<StatefulWidget> createState() {
-    return _ItemEditDialogState();
+  State<ProductDialog> createState() {
+    return _ProductDialogState();
   }
 }
 
-class _ItemEditDialogState extends State<ItemEditDialog> {
+class _ProductDialogState extends State<ProductDialog> {
   final _formKey = GlobalKey<FormState>();
 
   late ShoppingItem editedItem;
@@ -45,7 +45,7 @@ class _ItemEditDialogState extends State<ItemEditDialog> {
     if (value == '' || value.trim() == '') {
       return 'Must contain at least one symbol';
     }
-    editedItem.title = value;
+    editedItem.name = value;
     return null;
   }
 
@@ -72,12 +72,12 @@ class _ItemEditDialogState extends State<ItemEditDialog> {
               maxLines: 1,
               maxLength: 20,
               decoration: const InputDecoration(labelText: 'Product name'),
-              initialValue: editedItem.title,
+              initialValue: editedItem.name,
               onChanged: (value) {
                 if (value == '' || value.trim() == '') {
                   return;
                 }
-                editedItem.title = value;
+                editedItem.name = value;
                 _updateTotalPrice();
               },
               validator: (value) => _validateTextInput(value!),
@@ -87,34 +87,6 @@ class _ItemEditDialogState extends State<ItemEditDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(
-                  child: TextFormField(
-                    maxLines: 1,
-                    maxLength: 6,
-                    onChanged: (value) {
-                      if (double.tryParse(value) == null) {
-                        return;
-                      }
-                      editedItem.quantity = double.parse(value);
-                      _updateTotalPrice();
-                    },
-                    decoration: const InputDecoration(
-                      labelText: 'Unit quantity',
-                    ),
-                    validator: (value) => _validateNumberInput(value!),
-                    initialValue: editedItem.quantity.toString(),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.deny(RegExp(r'[ -]')),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Transform.rotate(
-                  angle: math.pi / 4,
-                  child: const Icon(Icons.add),
-                ),
-                const SizedBox(width: 10),
                 Expanded(
                   child: TextFormField(
                     maxLines: 1,
@@ -137,13 +109,41 @@ class _ItemEditDialogState extends State<ItemEditDialog> {
                     ],
                   ),
                 ),
+                const SizedBox(width: 10),
+                Transform.rotate(
+                  angle: math.pi / 4,
+                  child: const Icon(Icons.add),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextFormField(
+                    maxLines: 1,
+                    maxLength: 6,
+                    onChanged: (value) {
+                      if (double.tryParse(value) == null) {
+                        return;
+                      }
+                      editedItem.quantity = double.parse(value);
+                      _updateTotalPrice();
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Unit quantity',
+                    ),
+                    validator: (value) => _validateNumberInput(value!),
+                    initialValue: editedItem.quantity.toString(),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(RegExp(r'[ -]')),
+                    ],
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 20),
             Align(
               alignment: Alignment.centerRight,
               child: Text(
-                '${editedItem.title} total: $total',
+                '${editedItem.name} total: $total',
                 textAlign: TextAlign.end,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,

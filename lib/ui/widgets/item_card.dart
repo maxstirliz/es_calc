@@ -1,6 +1,5 @@
 import 'package:es_calc/models/shopping_item.dart';
 import 'package:es_calc/providers/shopping_list_provider.dart';
-import 'package:es_calc/ui/widgets/edit_item_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,11 +15,6 @@ class ItemCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final stateNotifier = ref.watch(shoppingListProvider.notifier);
 
-    void toggleBoughtIcon(ShoppingItem item) {
-      item.isBought = !item.isBought;
-      stateNotifier.updateItem(item);
-    }
-
     return Dismissible(
       key: ValueKey(item.id),
       onDismissed: (direction) {
@@ -34,49 +28,17 @@ class ItemCard extends ConsumerWidget {
         ),
         color: Colors.grey[100],
         child: ListTile(
-          leading: IconButton(
-            onPressed: () => toggleBoughtIcon(item),
-            icon: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 250),
-              child: item.isBought
-                  ? Container(
-                      key: const ValueKey('included'),
-                      child: const Icon(
-                        Icons.check_circle,
-                        color: Colors.green,
-                      ),
-                    )
-                  : Container(
-                      key: const ValueKey('not included'),
-                      child: const Icon(
-                        Icons.add,
-                        color: Colors.red,
-                      ),
-                    ),
-            ),
-          ),
-          trailing: IconButton(
-            icon: const Icon(
-              Icons.edit,
-              color: Colors.blueGrey,
-            ),
-            onPressed: () async {
-              final updatedItem = await showDialog<ShoppingItem>(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) {
-                    return ItemEditDialog(
-                      item: item,
-                      title: 'Edit Item',
-                    );
-                  });
-              if (updatedItem != null) {
-                stateNotifier.updateItem(updatedItem);
-              }
-            },
-          ),
-          title: Text(item.title),
-          subtitle: Text('${item.price} x ${item.quantity} = ${item.total}'),
+          leading: item.isBought
+              ? const Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                )
+              : const Icon(
+                  Icons.add,
+                  color: Colors.red,
+                ),
+          title: Text(item.name),
+          trailing: Text('x ${item.quantity}'),
         ),
       ),
     );

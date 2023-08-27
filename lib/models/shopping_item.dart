@@ -4,14 +4,14 @@ const uuid = Uuid();
 
 class ShoppingItem {
   ShoppingItem({
-    this.title = 'Product',
+    this.name = 'Product',
     this.price = 0.0,
     this.quantity = 1.0,
     this.isBought = true,
   }) : id = uuid.v4();
 
   String id;
-  String title;
+  String name;
   double price;
   double quantity;
   bool isBought;
@@ -22,7 +22,7 @@ class ShoppingItem {
 
   ShoppingItem copy() {
     return ShoppingItem(
-      title: title,
+      name: name,
       price: price,
       quantity: quantity,
       isBought: isBought,
@@ -30,7 +30,7 @@ class ShoppingItem {
   }
 
   void updateValues(ShoppingItem item) {
-    title = item.title;
+    name = item.name;
     price = item.price;
     quantity = item.quantity;
     isBought = item.isBought;
