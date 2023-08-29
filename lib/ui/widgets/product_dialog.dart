@@ -1,4 +1,5 @@
 import 'package:es_calc/models/shopping_item.dart';
+import 'package:es_calc/utils/formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
@@ -99,13 +100,15 @@ class _ProductDialogState extends State<ProductDialog> {
                       _updateTotalPrice();
                     },
                     decoration: const InputDecoration(
-                      labelText: 'Price per unit',
+                      labelText: 'Price',
                     ),
                     validator: (value) => _validateNumberInput(value!),
-                    initialValue: editedItem.price.toString(),
+                    initialValue: currencyFormatter(editedItem.price) == '0.00'
+                        ? '0'
+                        : currencyFormatter(editedItem.price),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
-                      FilteringTextInputFormatter.deny(RegExp(r'[ -]')),
+                      FilteringTextInputFormatter.deny(RegExp(r'[-, ]')),
                     ],
                   ),
                 ),
@@ -127,13 +130,13 @@ class _ProductDialogState extends State<ProductDialog> {
                       _updateTotalPrice();
                     },
                     decoration: const InputDecoration(
-                      labelText: 'Unit quantity',
+                      labelText: 'Quantity',
                     ),
                     validator: (value) => _validateNumberInput(value!),
-                    initialValue: editedItem.quantity.toString(),
+                    initialValue: quantityFormatter(editedItem.quantity),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
-                      FilteringTextInputFormatter.deny(RegExp(r'[ -]')),
+                      FilteringTextInputFormatter.deny(RegExp(r'[-, ]')),
                     ],
                   ),
                 ),
@@ -142,12 +145,15 @@ class _ProductDialogState extends State<ProductDialog> {
             const SizedBox(height: 20),
             Align(
               alignment: Alignment.centerRight,
-              child: Text(
-                '${editedItem.name} total: $total',
-                textAlign: TextAlign.end,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '${editedItem.name} total: ${currencyFormatter(total)}',
+                  textAlign: TextAlign.end,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ),

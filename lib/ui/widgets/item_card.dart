@@ -1,5 +1,6 @@
 import 'package:es_calc/models/shopping_item.dart';
 import 'package:es_calc/providers/shopping_list_provider.dart';
+import 'package:es_calc/utils/formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,9 +34,9 @@ class ItemCard extends ConsumerWidget {
                   Icons.check,
                   color: Colors.green,
                 )
-              : null,
+              : const SizedBox(),
           title: Text(item.name),
-          trailing: Text('x ${item.quantity}'),
+          trailing: Text('x ${quantityFormatter(item.quantity)}'),
         ),
       ),
     );

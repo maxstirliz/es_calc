@@ -1,6 +1,7 @@
 import 'package:es_calc/models/shopping_item.dart';
 import 'package:es_calc/providers/shopping_list_provider.dart';
 import 'package:es_calc/ui/widgets/product_dialog.dart';
+import 'package:es_calc/utils/formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -75,8 +76,36 @@ class ProductCard extends ConsumerWidget {
               }
             },
           ),
-          title: Text(item.name),
-          subtitle: Text('${item.price} x ${item.quantity} = ${item.total}'),
+          title: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(item.name),
+          ),
+          subtitle: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  '${currencyFormatter(item.price)} x ${quantityFormatter(item.quantity)}',
+                  textAlign: TextAlign.start,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  currencyFormatter(item.total),
+                  textAlign: TextAlign.end,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

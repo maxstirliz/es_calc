@@ -5,8 +5,8 @@ const uuid = Uuid();
 class ShoppingItem {
   ShoppingItem({
     this.name = 'Product',
-    this.price = 0.0,
-    this.quantity = 1.0,
+    this.price = 0.00,
+    this.quantity = 1,
     this.isBought = true,
   }) : id = uuid.v4();
 

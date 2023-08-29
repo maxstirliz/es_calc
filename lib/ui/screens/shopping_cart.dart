@@ -1,6 +1,7 @@
 import 'package:es_calc/providers/shopping_list_provider.dart';
 import 'package:es_calc/ui/widgets/product_card.dart';
-import 'package:es_calc/utils/shopping_calculator.dart';
+import 'package:es_calc/utils/calculation_utils.dart';
+import 'package:es_calc/utils/formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -27,8 +28,13 @@ class _ShoppingListScreenState extends ConsumerState<ShoppingCartScreen> {
   Widget build(BuildContext context) {
     final shoppingItems = ref.watch(shoppingListProvider);
 
+    String getTotal() {
+      final total = calculateGrandTotal(shoppingItems);
+      return currencyFormatter(total);
+    }
+
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(12),
       child: FutureBuilder(
           future: _itemsFuture,
           builder: (context, snapshot) {
@@ -38,8 +44,26 @@ class _ShoppingListScreenState extends ConsumerState<ShoppingCartScreen> {
                   )
                 : Column(
                     children: [
-                      Text(
-                          'Total: ${ShoppingCalculator.calculateGrandTotal(shoppingItems)}'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            calculateBoughtItemsRation(
+                                shoppingItems),
+                            style: const TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(),
+                          Text(
+                            'Total: ${getTotal()}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 16),
                       Expanded(
                         child: ListView.builder(
