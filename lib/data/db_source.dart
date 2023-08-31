@@ -14,12 +14,15 @@ const shoppingListTable = 'shopping_list';
 
 class DatabaseSource implements ShoppingListDataSource {
   Future<Database> _getDatabase() async {
-    return openDatabase(version: 1, join(await getDatabasesPath(), dbName),
-        onCreate: (db, version) {
-      return db.execute(
-        'CREATE TABLE $shoppingListTable($id INTEGER PRIMARY KEY, $uuid TEXT, $name TEXT, $price REAL, $quantity REAL, $isBought INTEGER)',
-      );
-    });
+    return openDatabase(
+      version: 1,
+      join(await getDatabasesPath(), dbName),
+      onCreate: (db, version) {
+        return db.execute(
+          'CREATE TABLE $shoppingListTable($id INTEGER PRIMARY KEY, $uuid TEXT, $name TEXT, $price REAL, $quantity REAL, $isBought INTEGER)',
+        );
+      },
+    );
   }
 
   @override

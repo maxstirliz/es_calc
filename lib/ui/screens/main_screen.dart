@@ -45,7 +45,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       floatingActionButton:
           currentNavigationIndex == 0 || currentNavigationIndex == 1
               ? FloatingActionButton(
-                  backgroundColor: Colors.greenAccent,
+                  backgroundColor: const Color.fromARGB(250, 145, 232, 252),
                   onPressed: () async {
                     if (currentNavigationIndex == 0) {
                       final updatedItem = await showDialog<ShoppingItem>(
@@ -75,9 +75,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: NavigationBar(
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-        indicatorColor: Colors.lightBlueAccent,
+        indicatorColor: const Color.fromARGB(255, 229, 252, 231),
         selectedIndex: currentNavigationIndex,
-        backgroundColor: Colors.yellowAccent,
+        backgroundColor: const Color.fromARGB(255, 250, 247, 119),
         onDestinationSelected: (index) {
           setState(() {
             currentNavigationIndex = index;
