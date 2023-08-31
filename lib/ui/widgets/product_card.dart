@@ -23,9 +23,9 @@ class ProductCard extends ConsumerWidget {
     }
 
     return Dismissible(
-      key: ValueKey(item.id),
+      key: ValueKey(item.uuid),
       onDismissed: (direction) {
-        stateNotifier.deleteItem(item.id);
+        stateNotifier.deleteItem(item.uuid);
       },
       child: Card(
         elevation: 1,

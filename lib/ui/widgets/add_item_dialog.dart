@@ -17,7 +17,6 @@ class AddItemDialog extends ConsumerStatefulWidget {
 
 class _AddItemDialogState extends ConsumerState<AddItemDialog> {
   final _formKey = GlobalKey<FormState>();
-  final List<ShoppingItem> newItems = [];
   final _nameInputController = TextEditingController();
   final _quantityInputController = TextEditingController();
   final _nameFocusNode = FocusNode();
@@ -57,47 +56,50 @@ class _AddItemDialogState extends ConsumerState<AddItemDialog> {
         'Add Shopping Items',
         textAlign: TextAlign.center,
       ),
-      content: Form(
-        key: _formKey,
-        autovalidateMode: AutovalidateMode.always,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              maxLines: 1,
-              maxLength: 20,
-              decoration: const InputDecoration(labelText: 'Item name'),
-              controller: _nameInputController,
-              focusNode: _nameFocusNode,
-              onChanged: (value) {
-                if (value == '' || value.trim() == '') {
-                  return;
-                }
-                editedItem.name = value;
-              },
-              validator: (value) => _validateTextInput(value!),
-            ),
-            const SizedBox(height: 20),
-            TextFormField(
-              maxLines: 1,
-              maxLength: 6,
-              onChanged: (value) {
-                if (double.tryParse(value) == null) {
-                  return;
-                }
-                editedItem.quantity = double.parse(value);
-              },
-              decoration: const InputDecoration(
-                labelText: 'Number / Quantity',
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.7,
+        child: Form(
+          key: _formKey,
+          autovalidateMode: AutovalidateMode.always,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                maxLines: 1,
+                maxLength: 20,
+                decoration: const InputDecoration(labelText: 'Item name'),
+                controller: _nameInputController,
+                focusNode: _nameFocusNode,
+                onChanged: (value) {
+                  if (value == '' || value.trim() == '') {
+                    return;
+                  }
+                  editedItem.name = value;
+                },
+                validator: (value) => _validateTextInput(value!),
               ),
-              controller: _quantityInputController,
-              validator: (value) => _validateNumberInput(value!),
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.deny(RegExp(r'[ -]')),
-              ],
-            ),
-          ],
+              const SizedBox(height: 20),
+              TextFormField(
+                maxLines: 1,
+                maxLength: 6,
+                onChanged: (value) {
+                  if (double.tryParse(value) == null) {
+                    return;
+                  }
+                  editedItem.quantity = double.parse(value);
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Number / Quantity',
+                ),
+                controller: _quantityInputController,
+                validator: (value) => _validateNumberInput(value!),
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.deny(RegExp(r'[-, ]')),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       actions: [
