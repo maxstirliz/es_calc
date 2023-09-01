@@ -34,77 +34,73 @@ class ProductCard extends ConsumerWidget {
           horizontal: 4,
         ),
         color: Colors.grey[100],
-        child: ListTile(
-          leading: IconButton(
-            onPressed: () => toggleBoughtIcon(item),
-            icon: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 250),
-              child: item.isBought
-                  ? Container(
-                      key: const ValueKey('included'),
-                      child: const Icon(
-                        Icons.check_circle,
-                        color: Colors.green,
+        child: InkWell(
+          onTap: ()async {
+            final updatedItem = await showDialog<ShoppingItem>(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return ProductDialog(
+                    item: item,
+                    title: 'Edit Product',
+                  );
+                });
+            if (updatedItem != null) {
+              stateNotifier.updateItem(updatedItem);
+            }
+          },
+          child: ListTile(
+            leading: IconButton(
+              onPressed: () => toggleBoughtIcon(item),
+              icon: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                child: item.isBought
+                    ? Container(
+                        key: const ValueKey('included'),
+                        child: const Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                        ),
+                      )
+                    : Container(
+                        key: const ValueKey('not included'),
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.red,
+                        ),
                       ),
-                    )
-                  : Container(
-                      key: const ValueKey('not included'),
-                      child: const Icon(
-                        Icons.add,
-                        color: Colors.red,
-                      ),
-                    ),
-            ),
-          ),
-          trailing: IconButton(
-            icon: const Icon(
-              Icons.edit,
-              color: Colors.blueGrey,
-            ),
-            onPressed: () async {
-              final updatedItem = await showDialog<ShoppingItem>(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) {
-                    return ProductDialog(
-                      item: item,
-                      title: 'Edit Product',
-                    );
-                  });
-              if (updatedItem != null) {
-                stateNotifier.updateItem(updatedItem);
-              }
-            },
-          ),
-          title: FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
-            child: Text(item.name),
-          ),
-          subtitle: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  '${currencyFormatter(item.price)} x ${quantityFormatter(item.quantity)}',
-                  textAlign: TextAlign.start,
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
-                ),
               ),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Text(
-                  currencyFormatter(item.total),
-                  textAlign: TextAlign.end,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+            ),
+            title: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: item.name != '' ? Text(item.name) : const Text('Product'),
+            ),
+            subtitle: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    '${currencyFormatter(item.price)} x ${quantityFormatter(item.quantity)}',
+                    textAlign: TextAlign.start,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    currencyFormatter(item.total),
+                    textAlign: TextAlign.end,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

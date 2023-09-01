@@ -31,20 +31,13 @@ class _ProductDialogState extends State<ProductDialog> {
   }
 
   String? _validateNumberInput(String value) {
-    if (double.tryParse(value) == null) {
+    if (value == '') {
+      return null;
+    } else if (double.tryParse(value) == null) {
       return 'Not a number';
+    } else {
+      return null;
     }
-    return null;
-  }
-
-  String? _validateTextInput(
-    String value,
-  ) {
-    if (value == '' || value.trim() == '') {
-      return 'Must contain at least one symbol';
-    }
-    editedItem.name = value;
-    return null;
   }
 
   void _updateTotalPrice() {
@@ -53,9 +46,11 @@ class _ProductDialogState extends State<ProductDialog> {
     });
   }
 
-  String _normalizedInitialPriceValue(double value) {
+  String _normalizedNumericalValue(double value) {
     if (currencyFormatter(value).length > 6) {
       return currencyFormatter(value).substring(0, 6);
+    } else if (currencyFormatter(value) == '0.00') {
+      return '';
     } else if (currencyFormatter(value).substring(
             currencyFormatter(value).length - 3,
             currencyFormatter(value).length) ==
@@ -97,13 +92,9 @@ class _ProductDialogState extends State<ProductDialog> {
                         const InputDecoration(labelText: 'Product name'),
                     initialValue: editedItem.name,
                     onChanged: (value) {
-                      if (value == '' || value.trim() == '') {
-                        return;
-                      }
-                      editedItem.name = value;
+                      editedItem.name = value.trim();
                       _updateTotalPrice();
                     },
-                    validator: (value) => _validateTextInput(value!),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -115,10 +106,13 @@ class _ProductDialogState extends State<ProductDialog> {
                           maxLines: 1,
                           maxLength: 6,
                           onChanged: (value) {
-                            if (double.tryParse(value) == null) {
+                            if (value == '') {
+                              editedItem.price = 0.0;
+                            } else if (double.tryParse(value) == null) {
                               return;
+                            } else {
+                              editedItem.price = double.parse(value);
                             }
-                            editedItem.price = double.parse(value);
                             _updateTotalPrice();
                           },
                           decoration: const InputDecoration(
@@ -126,11 +120,11 @@ class _ProductDialogState extends State<ProductDialog> {
                           ),
                           validator: (value) => _validateNumberInput(value!),
                           initialValue:
-                              _normalizedInitialPriceValue(editedItem.price),
+                              _normalizedNumericalValue(editedItem.price),
                           keyboardType: const TextInputType.numberWithOptions(
                               decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.deny(RegExp(r'[-, ]')),
+                            FilteringTextInputFormatter.deny(RegExp(r'[ ,]')),
                           ],
                         ),
                       ),
@@ -152,7 +146,7 @@ class _ProductDialogState extends State<ProductDialog> {
                             labelText: 'Quantity',
                           ),
                           validator: (value) => _validateNumberInput(value!),
-                          initialValue: quantityFormatter(editedItem.quantity),
+                          initialValue: _normalizedNumericalValue(editedItem.quantity),
                           keyboardType: const TextInputType.numberWithOptions(
                               decimal: true),
                           inputFormatters: [
@@ -206,8 +200,10 @@ class _ProductDialogState extends State<ProductDialog> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       widget.item.updateValues(editedItem);
-                      if (widget.item.total > 0) {
+                      if (widget.item.total != 0) {
                         widget.item.isBought = true;
+                      } else {
+                        widget.item.isBought = false;
                       }
                       Navigator.of(context).pop<ShoppingItem>(widget.item);
                     }

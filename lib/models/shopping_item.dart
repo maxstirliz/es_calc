@@ -5,7 +5,7 @@ const uuidProvider = Uuid();
 
 class ShoppingItem {
   ShoppingItem({
-    this.name = 'Product',
+    this.name = '',
     this.price = 0.00,
     this.quantity = 1,
     this.isBought = false,

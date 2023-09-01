@@ -35,7 +35,7 @@ class ItemCard extends ConsumerWidget {
                   color: Colors.green,
                 )
               : const SizedBox(),
-          title: Text(item.name),
+          title: item.name != '' ? Text(item.name) : const Text('Product'),
           trailing: Text('x ${quantityFormatter(item.quantity)}'),
         ),
       ),

@@ -29,7 +29,10 @@ class DatabaseSource implements ShoppingListDataSource {
   Future<List<ShoppingItem>> getItems() async {
     final db = await _getDatabase();
 
-    final List<Map<String, dynamic>> maps = await db.query(shoppingListTable);
+    final List<Map<String, dynamic>> maps = await db.query(
+      shoppingListTable,
+      orderBy: '$isBought ASC',
+    );
 
     return List.generate(
         maps.length, (index) => ShoppingItem().fromMap(maps[index]));

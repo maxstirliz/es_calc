@@ -24,12 +24,22 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
   final List<Screen?> _screens = [
     Screen(
-        screen: const ShoppingCartScreen(), title: const Text('Shopping Cart')),
+      screen: const ShoppingCartScreen(),
+      title: const Text('Shopping Cart'),
+    ),
     Screen(
-        screen: const ShoppingListScreen(), title: const Text('Shopping List')),
+      screen: const ShoppingListScreen(),
+      title: const Text('Shopping List'),
+    ),
     null,
-    Screen(screen: const CompareScreen(), title: const Text('Compare Prices')),
-    Screen(screen: const SettingsScreen(), title: const Text('Settings')),
+    Screen(
+      screen: const CompareScreen(),
+      title: const Text('Compare Prices'),
+    ),
+    Screen(
+      screen: const SettingsScreen(),
+      title: const Text('Settings'),
+    ),
   ];
 
   @override
@@ -45,7 +55,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       floatingActionButton:
           currentNavigationIndex == 0 || currentNavigationIndex == 1
               ? FloatingActionButton(
-                  backgroundColor: const Color.fromARGB(250, 145, 232, 252),
+                  backgroundColor: Color.fromARGB(255, 7, 97, 143),
                   onPressed: () async {
                     if (currentNavigationIndex == 0) {
                       final updatedItem = await showDialog<ShoppingItem>(
@@ -73,35 +83,56 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                 )
               : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: NavigationBar(
-        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-        indicatorColor: const Color.fromARGB(255, 229, 252, 231),
-        selectedIndex: currentNavigationIndex,
-        backgroundColor: const Color.fromARGB(255, 250, 247, 119),
-        onDestinationSelected: (index) {
-          setState(() {
-            currentNavigationIndex = index;
-          });
-        },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.shopping_cart_outlined),
-            label: 'Cart',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.list_outlined),
-            label: 'List',
-          ),
-          SizedBox(),
-          NavigationDestination(
-            icon: Icon(Icons.compare_arrows_outlined),
-            label: 'Compare',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            label: 'Settings',
-          ),
-        ],
+      bottomNavigationBar: BottomAppBar(
+        height: 60,
+        notchMargin: 6,
+        elevation: 8,
+        color: const Color.fromARGB(255, 246, 242, 96),
+        shape: const CircularNotchedRectangle(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              padding: const EdgeInsets.only(left: 20),
+              splashRadius: 24,
+              onPressed: () {
+                setState(() {
+                  currentNavigationIndex = 0;
+                });
+              },
+              icon: const Icon(Icons.shopping_cart_outlined),
+            ),
+            IconButton(
+              splashRadius: 24,
+              onPressed: () {
+                setState(() {
+                  currentNavigationIndex = 1;
+                });
+              },
+              icon: const Icon(Icons.list_outlined),
+            ),
+            const SizedBox(),
+            IconButton(
+              splashRadius: 24,
+              onPressed: () {
+                setState(() {
+                  currentNavigationIndex = 3;
+                });
+              },
+              icon: const Icon(Icons.compare_arrows_outlined),
+            ),
+            IconButton(
+              padding: const EdgeInsets.only(right: 20),
+              splashRadius: 24,
+              onPressed: () {
+                setState(() {
+                  currentNavigationIndex = 4;
+                });
+              },
+              icon: const Icon(Icons.settings_outlined),
+            ),
+          ],
+        ),
       ),
     );
   }
