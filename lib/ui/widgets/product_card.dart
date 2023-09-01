@@ -35,7 +35,7 @@ class ProductCard extends ConsumerWidget {
         ),
         color: Colors.grey[100],
         child: InkWell(
-          onTap: ()async {
+          onTap: () async {
             final updatedItem = await showDialog<ShoppingItem>(
                 context: context,
                 barrierDismissible: false,

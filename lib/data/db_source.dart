@@ -1,7 +1,7 @@
 import 'package:es_calc/data/shopping_list_data_source.dart';
 import 'package:es_calc/models/shopping_item.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 const id = 'id';
 const uuid = 'uuid';

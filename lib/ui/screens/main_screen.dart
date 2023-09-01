@@ -55,7 +55,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       floatingActionButton:
           currentNavigationIndex == 0 || currentNavigationIndex == 1
               ? FloatingActionButton(
-                  backgroundColor: Color.fromARGB(255, 7, 97, 143),
+                  backgroundColor: const Color.fromARGB(255, 7, 97, 143),
                   onPressed: () async {
                     if (currentNavigationIndex == 0) {
                       final updatedItem = await showDialog<ShoppingItem>(
@@ -79,7 +79,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                           });
                     }
                   },
-                  child: const Icon(Icons.add),
+                  child: const Icon(Icons.add, color: Colors.white,),
                 )
               : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

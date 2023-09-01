@@ -48,11 +48,8 @@ class _ShoppingListScreenState extends ConsumerState<ShoppingCartScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            calculateBoughtItemsRation(
-                                shoppingItems),
-                            style: const TextStyle(
-                              fontSize: 16,
-                            ),
+                            calculateBoughtItemsRation(shoppingItems),
+                            style: const TextStyle(fontSize: 16),
                           ),
                           const SizedBox(),
                           Text(
