@@ -5,10 +5,29 @@ import 'package:es_calc/ui/screens/compare_prices.dart';
 import 'package:es_calc/ui/screens/settings.dart';
 import 'package:es_calc/ui/screens/shopping_cart.dart';
 import 'package:es_calc/ui/screens/shopping_list.dart';
-import 'package:es_calc/ui/widgets/add_item_dialog.dart';
 import 'package:es_calc/ui/widgets/product_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final screens = [
+  Screen(
+    screen: const ShoppingCartScreen(),
+    title: const Text('Shopping Cart'),
+  ),
+  Screen(
+    screen: const ShoppingListScreen(),
+    title: const Text('Shopping List'),
+  ),
+  null,
+  Screen(
+    screen: const CompareScreen(),
+    title: const Text('Compare Prices'),
+  ),
+  Screen(
+    screen: const SettingsScreen(),
+    title: const Text('Settings'),
+  ),
+];
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
@@ -22,78 +41,52 @@ class MainScreen extends ConsumerStatefulWidget {
 class _MainScreenState extends ConsumerState<MainScreen> {
   int currentNavigationIndex = 0;
 
-  final List<Screen?> _screens = [
-    Screen(
-      screen: const ShoppingCartScreen(),
-      title: const Text('Shopping Cart'),
-    ),
-    Screen(
-      screen: const ShoppingListScreen(),
-      title: const Text('Shopping List'),
-    ),
-    null,
-    Screen(
-      screen: const CompareScreen(),
-      title: const Text('Compare Prices'),
-    ),
-    Screen(
-      screen: const SettingsScreen(),
-      title: const Text('Settings'),
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final stateNotifier = ref.watch(shoppingListProvider.notifier);
+    final shoppingItems = ref.watch(shoppingListProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: _screens[currentNavigationIndex]!.title,
+        title: screens[currentNavigationIndex]!.title,
         centerTitle: true,
       ),
-      body: _screens[currentNavigationIndex]!.screen,
-      floatingActionButton:
-          currentNavigationIndex == 0 || currentNavigationIndex == 1
-              ? FloatingActionButton(
-                  backgroundColor: const Color.fromARGB(255, 7, 97, 143),
-                  onPressed: () async {
-                    if (currentNavigationIndex == 0) {
-                      final updatedItem = await showDialog<ShoppingItem>(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (_) {
-                            return ProductDialog(
-                              item: ShoppingItem(),
-                              title: 'Add Product',
-                            );
-                          });
-                      if (updatedItem != null) {
-                        stateNotifier.addItem(updatedItem);
-                      }
-                    } else {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (_) {
-                            return const AddItemDialog();
-                          });
-                    }
-                  },
-                  child: const Icon(Icons.add, color: Colors.white,),
-                )
-              : null,
+      body: screens[currentNavigationIndex]!.screen,
+      floatingActionButton: currentNavigationIndex == 0
+          ? FloatingActionButton(
+              shape: const CircleBorder(),
+              backgroundColor: const Color.fromARGB(255, 7, 97, 143),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              onPressed: () async {
+                final newItem = await showDialog<ShoppingItem>(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) {
+                      return ProductDialog(
+                        item: ShoppingItem(),
+                        title: 'Add to Cart',
+                      );
+                    });
+                if (newItem != null) {
+                  final newIndex = await stateNotifier.addItem(newItem);
+                  listKey.currentState!.insertItem(newIndex);
+                }
+              },
+            )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         height: 60,
-        notchMargin: 6,
-        elevation: 8,
+        notchMargin: 4,
         color: const Color.fromARGB(255, 246, 242, 96),
         shape: const CircularNotchedRectangle(),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
-              padding: const EdgeInsets.only(left: 20),
               splashRadius: 24,
               onPressed: () {
                 setState(() {
@@ -122,7 +115,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               icon: const Icon(Icons.compare_arrows_outlined),
             ),
             IconButton(
-              padding: const EdgeInsets.only(right: 20),
               splashRadius: 24,
               onPressed: () {
                 setState(() {

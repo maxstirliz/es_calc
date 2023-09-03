@@ -1,5 +1,6 @@
 import 'package:es_calc/models/shopping_item.dart';
 import 'package:es_calc/providers/shopping_list_provider.dart';
+import 'package:es_calc/ui/screens/shopping_cart.dart';
 import 'package:es_calc/ui/widgets/product_dialog.dart';
 import 'package:es_calc/utils/formatter.dart';
 import 'package:flutter/material.dart';
@@ -9,24 +10,20 @@ class ProductCard extends ConsumerWidget {
   const ProductCard({
     super.key,
     required this.item,
+    required this.animation,
   });
 
   final ShoppingItem item;
+  final Animation<double> animation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stateNotifier = ref.watch(shoppingListProvider.notifier);
+    final shoppingItems = ref.watch(shoppingListProvider);
 
-    void toggleBoughtIcon(ShoppingItem item) {
-      item.isBought = !item.isBought;
-      stateNotifier.updateItem(item);
-    }
-
-    return Dismissible(
+    return SizeTransition(
       key: ValueKey(item.uuid),
-      onDismissed: (direction) {
-        stateNotifier.deleteItem(item.uuid);
-      },
+      sizeFactor: animation,
       child: Card(
         elevation: 1,
         margin: const EdgeInsets.symmetric(
@@ -42,33 +39,46 @@ class ProductCard extends ConsumerWidget {
                 builder: (context) {
                   return ProductDialog(
                     item: item,
-                    title: 'Edit Product',
+                    title: 'Edit Item',
                   );
                 });
             if (updatedItem != null) {
-              stateNotifier.updateItem(updatedItem);
+              int oldIndex = shoppingItems.indexOf(item);
+              int newIndex = await stateNotifier.updateItem(updatedItem);
+              if (oldIndex != newIndex) {
+                listKey.currentState!.removeItem(oldIndex, (context, animation) => ProductCard(item: item, animation: animation));
+                listKey.currentState!.insertItem(newIndex);
+              }
             }
           },
           child: ListTile(
             leading: IconButton(
-              onPressed: () => toggleBoughtIcon(item),
+              onPressed: () async {
+                item.isBought = !item.isBought;
+                int oldIndex = shoppingItems.indexOf(item);
+                int newIndex = await stateNotifier.updateItem(item);
+                if (oldIndex != newIndex) {
+                  listKey.currentState!.removeItem(oldIndex, (context, animation) => ProductCard(item: item, animation: animation));
+                  listKey.currentState!.insertItem(newIndex);
+                }
+              },
               icon: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 250),
                 child: item.isBought
                     ? Container(
-                        key: const ValueKey('included'),
-                        child: const Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
-                        ),
-                      )
+                  key: const ValueKey('included'),
+                  child: const Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                  ),
+                )
                     : Container(
-                        key: const ValueKey('not included'),
-                        child: const Icon(
-                          Icons.add,
-                          color: Colors.red,
-                        ),
-                      ),
+                  key: const ValueKey('not included'),
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.red,
+                  ),
+                ),
               ),
             ),
             title: FittedBox(
@@ -81,7 +91,8 @@ class ProductCard extends ConsumerWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '${currencyFormatter(item.price)} x ${quantityFormatter(item.quantity)}',
+                    '${currencyFormatter(item.price)} x ${quantityFormatter(
+                        item.quantity)}',
                     textAlign: TextAlign.start,
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
@@ -100,6 +111,14 @@ class ProductCard extends ConsumerWidget {
                   ),
                 ),
               ],
+            ),
+            trailing: IconButton(
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+              onPressed: () {
+              },
             ),
           ),
         ),

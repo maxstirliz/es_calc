@@ -16,13 +16,19 @@ class ShoppingListNotifier extends StateNotifier<List<ShoppingItem>> {
     state = await shoppingListRepository.getItems();
   }
 
-  void addItem(ShoppingItem item) async {
+  Future<int> addItem(ShoppingItem item) async {
     await shoppingListRepository.addItem(item);
-    state = [...await shoppingListRepository.getItems()];
+    final list = await shoppingListRepository.getItems();
+    final newItem =list.where((i) => i.uuid == item.uuid).toList();
+    state = [...list];
+    return list.indexOf(newItem[0]);
   }
 
-  void updateItem(ShoppingItem item) async {
+  Future<int> updateItem(ShoppingItem item) async {
     state = [...await shoppingListRepository.updateItem(item)];
+    final list = await shoppingListRepository.getItems();
+    final newItem = list.where((i) => i.uuid == item.uuid).toList();
+    return list.indexOf(newItem[0]);
   }
 
   void deleteItem(String itemId) async {

@@ -13,6 +13,7 @@ const dbName = 'es_calc.db';
 const shoppingListTable = 'shopping_list';
 
 class DatabaseSource implements ShoppingListDataSource {
+
   Future<Database> _getDatabase() async {
     return openDatabase(
       version: 1,
@@ -31,7 +32,7 @@ class DatabaseSource implements ShoppingListDataSource {
 
     final List<Map<String, dynamic>> maps = await db.query(
       shoppingListTable,
-      orderBy: '$isBought ASC',
+      orderBy: '$isBought ASC, $name ASC, $uuid ASC',
     );
 
     return List.generate(

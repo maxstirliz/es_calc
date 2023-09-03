@@ -23,7 +23,7 @@ class EasySoppingCalculator extends StatelessWidget {
         useMaterial3: true,
       ),
       title: 'ESCalc',
-      home: const MainScreen(),
+      home: MainScreen(),
     );
   }
 }

@@ -5,8 +5,12 @@ import 'package:es_calc/utils/formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final listKey = GlobalKey<AnimatedListState>();
+
 class ShoppingCartScreen extends ConsumerStatefulWidget {
-  const ShoppingCartScreen({super.key});
+  const ShoppingCartScreen({
+    super.key,
+  });
 
   @override
   ConsumerState<ShoppingCartScreen> createState() {
@@ -63,10 +67,14 @@ class _ShoppingListScreenState extends ConsumerState<ShoppingCartScreen> {
                       ),
                       const SizedBox(height: 16),
                       Expanded(
-                        child: ListView.builder(
-                          itemCount: shoppingItems.length,
-                          itemBuilder: (_, index) {
-                            return ProductCard(item: shoppingItems[index]);
+                        child: AnimatedList(
+                          key: listKey,
+                          initialItemCount: shoppingItems.length,
+                          itemBuilder: (context, i, animation) {
+                            return ProductCard(
+                              item: shoppingItems[i],
+                              animation: animation,
+                            );
                           },
                         ),
                       ),
