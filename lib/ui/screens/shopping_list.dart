@@ -1,5 +1,4 @@
 import 'package:es_calc/providers/shopping_list_provider.dart';
-import 'package:es_calc/ui/widgets/item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -37,7 +36,9 @@ class _ShoppingListScreenState extends ConsumerState<ShoppingListScreen> {
                 : ListView.builder(
                     itemCount: shoppingItems.length,
                     itemBuilder: (_, index) {
-                      return ItemCard(item: shoppingItems[index]);
+                      return Card(
+                        child: Text(shoppingItems[index].name),
+                      );
                     },
                   );
           }),

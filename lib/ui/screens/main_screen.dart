@@ -9,26 +9,6 @@ import 'package:es_calc/ui/widgets/product_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final screens = [
-  Screen(
-    screen: const ShoppingCartScreen(),
-    title: const Text('Shopping Cart'),
-  ),
-  Screen(
-    screen: const ShoppingListScreen(),
-    title: const Text('Shopping List'),
-  ),
-  null,
-  Screen(
-    screen: const CompareScreen(),
-    title: const Text('Compare Prices'),
-  ),
-  Screen(
-    screen: const SettingsScreen(),
-    title: const Text('Settings'),
-  ),
-];
-
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
 
@@ -39,44 +19,65 @@ class MainScreen extends ConsumerStatefulWidget {
 }
 
 class _MainScreenState extends ConsumerState<MainScreen> {
-  int currentNavigationIndex = 0;
+  int _currentNavigationIndex = 0;
+  final _listKey = GlobalKey<AnimatedListState>();
 
   @override
   Widget build(BuildContext context) {
     final stateNotifier = ref.watch(shoppingListProvider.notifier);
-    final shoppingItems = ref.watch(shoppingListProvider);
+
+    final screens = [
+      Screen(
+        screen: ShoppingCartScreen(listKey: _listKey),
+        title: const Text('Shopping Cart'),
+      ),
+      Screen(
+        screen: const ShoppingListScreen(),
+        title: const Text('Shopping List Manager'),
+      ),
+      null,
+      Screen(
+        screen: const CompareScreen(),
+        title: const Text('Compare Prices'),
+      ),
+      Screen(
+        screen: const SettingsScreen(),
+        title: const Text('Settings'),
+      ),
+    ];
 
     return Scaffold(
       appBar: AppBar(
-        title: screens[currentNavigationIndex]!.title,
+        title: screens[_currentNavigationIndex]!.title,
         centerTitle: true,
       ),
-      body: screens[currentNavigationIndex]!.screen,
-      floatingActionButton: currentNavigationIndex == 0
-          ? FloatingActionButton(
-              shape: const CircleBorder(),
-              backgroundColor: const Color.fromARGB(255, 7, 97, 143),
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              onPressed: () async {
-                final newItem = await showDialog<ShoppingItem>(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (_) {
-                      return ProductDialog(
-                        item: ShoppingItem(),
-                        title: 'Add to Cart',
-                      );
-                    });
-                if (newItem != null) {
-                  final newIndex = await stateNotifier.addItem(newItem);
-                  listKey.currentState!.insertItem(newIndex);
-                }
-              },
-            )
-          : null,
+      body: screens[_currentNavigationIndex]!.screen,
+      floatingActionButton:
+          _currentNavigationIndex == 0 || _currentNavigationIndex == 1
+              ? FloatingActionButton(
+                  shape: const CircleBorder(),
+                  backgroundColor: const Color.fromARGB(255, 7, 97, 143),
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  onPressed: () async {
+                    final newItem = await showDialog<ShoppingItem>(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) {
+                          return ProductDialog(
+                            item: ShoppingItem(),
+                            title: 'Add to Cart',
+                          );
+                        });
+                    if (newItem != null) {
+                      final newIndex = await stateNotifier.addItem(newItem);
+                      _listKey.currentState!.insertItem(newIndex);
+                    }
+                  },
+                )
+              : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         height: 60,
@@ -90,7 +91,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               splashRadius: 24,
               onPressed: () {
                 setState(() {
-                  currentNavigationIndex = 0;
+                  _currentNavigationIndex = 0;
                 });
               },
               icon: const Icon(Icons.shopping_cart_outlined),
@@ -99,7 +100,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               splashRadius: 24,
               onPressed: () {
                 setState(() {
-                  currentNavigationIndex = 1;
+                  _currentNavigationIndex = 1;
                 });
               },
               icon: const Icon(Icons.list_outlined),
@@ -109,7 +110,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               splashRadius: 24,
               onPressed: () {
                 setState(() {
-                  currentNavigationIndex = 3;
+                  _currentNavigationIndex = 3;
                 });
               },
               icon: const Icon(Icons.compare_arrows_outlined),
@@ -118,7 +119,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               splashRadius: 24,
               onPressed: () {
                 setState(() {
-                  currentNavigationIndex = 4;
+                  _currentNavigationIndex = 4;
                 });
               },
               icon: const Icon(Icons.settings_outlined),
