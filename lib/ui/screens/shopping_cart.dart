@@ -1,11 +1,10 @@
 import 'package:es_calc/providers/shopping_list_provider.dart';
+import 'package:es_calc/ui/widgets/animated_text.dart';
 import 'package:es_calc/ui/widgets/product_card.dart';
 import 'package:es_calc/utils/calculation_utils.dart';
 import 'package:es_calc/utils/formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-
 
 class ShoppingCartScreen extends ConsumerStatefulWidget {
   const ShoppingCartScreen({
@@ -13,7 +12,7 @@ class ShoppingCartScreen extends ConsumerStatefulWidget {
     required this.listKey,
   });
 
-  final GlobalKey<AnimatedListState>listKey;
+  final GlobalKey<AnimatedListState> listKey;
 
   @override
   ConsumerState<ShoppingCartScreen> createState() {
@@ -54,12 +53,12 @@ class _ShoppingListScreenState extends ConsumerState<ShoppingCartScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          AnimatedText(
                             calculateBoughtItemsRation(shoppingItems),
                             style: const TextStyle(fontSize: 16),
                           ),
                           const SizedBox(),
-                          Text(
+                          AnimatedText(
                             'Total: ${getTotal()}',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,

@@ -47,6 +47,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     ];
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: screens[_currentNavigationIndex]!.title,
         centerTitle: true,

@@ -1,4 +1,5 @@
 import 'package:es_calc/models/shopping_item.dart';
+import 'package:es_calc/ui/widgets/animated_text.dart';
 import 'package:es_calc/utils/formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +34,7 @@ class _ProductDialogState extends State<ProductDialog> {
   String? _validateNumberInput(String value) {
     if (value == '') {
       return null;
-    } else if (double.tryParse(value) == null) {
+    } else if (double.tryParse(value.replaceAll(',', '.')) == null) {
       return 'Not a number';
     } else {
       return null;
@@ -108,10 +109,10 @@ class _ProductDialogState extends State<ProductDialog> {
                           onChanged: (value) {
                             if (value == '') {
                               editedItem.price = 0.0;
-                            } else if (double.tryParse(value) == null) {
+                            } else if (double.tryParse(value.replaceAll(',', '.')) == null) {
                               return;
                             } else {
-                              editedItem.price = double.parse(value);
+                              editedItem.price = double.parse(value.replaceAll(',', '.'));
                             }
                             _updateTotalPrice();
                           },
@@ -124,7 +125,7 @@ class _ProductDialogState extends State<ProductDialog> {
                           keyboardType: const TextInputType.numberWithOptions(
                               decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.deny(RegExp(r'[ ,]')),
+                            FilteringTextInputFormatter.deny(RegExp(r'[- ]')),
                           ],
                         ),
                       ),
@@ -146,11 +147,14 @@ class _ProductDialogState extends State<ProductDialog> {
                             labelText: 'Quantity',
                           ),
                           validator: (value) => _validateNumberInput(value!),
-                          initialValue: _normalizedNumericalValue(editedItem.quantity),
+                          initialValue:
+                              _normalizedNumericalValue(editedItem.quantity),
                           keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true),
+                            decimal: true,
+
+                          ),
                           inputFormatters: [
-                            FilteringTextInputFormatter.deny(RegExp(r'[-, ]')),
+                            FilteringTextInputFormatter.deny(RegExp(r'[- ]')),
                           ],
                         ),
                       ),
@@ -161,7 +165,7 @@ class _ProductDialogState extends State<ProductDialog> {
                     alignment: Alignment.centerRight,
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
-                      child: Text(
+                      child: AnimatedText(
                         'Total: ${currencyFormatter(total)}',
                         textAlign: TextAlign.end,
                         style: const TextStyle(
@@ -210,7 +214,7 @@ class _ProductDialogState extends State<ProductDialog> {
                   },
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

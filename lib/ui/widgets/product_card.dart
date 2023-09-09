@@ -24,135 +24,141 @@ class ProductCard extends ConsumerStatefulWidget {
 }
 
 class _ProductCardState extends ConsumerState<ProductCard> {
+  final _animationDuration = 350;
+
   @override
   Widget build(BuildContext context) {
     final stateNotifier = ref.watch(shoppingListProvider.notifier);
     final shoppingItems = ref.watch(shoppingListProvider);
+    final currentIndex = shoppingItems.indexOf(widget.item);
 
-    return SizeTransition(
-      key: ValueKey<String>(widget.item.uuid),
-      sizeFactor: widget.animation,
-      child: ExpansionTile(
-        backgroundColor: Colors.grey[100],
-        leading: Checkbox(
-          value: widget.item.isBought,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          onChanged: (value) async {
-            widget.item.isBought = value!;
+    return IgnorePointer(
+      ignoring: widget.isDummy,
+      child: SizeTransition(
+        key: ValueKey<String>(widget.item.uuid),
+        sizeFactor: widget.animation,
+        child: InkWell(
+          onTap: () async {
             final oldItem = widget.item;
-            final oldIndex = shoppingItems.indexOf(widget.item);
-            final newIndex = await stateNotifier.updateItem(widget.item);
-            if (oldIndex == newIndex) {
-              setState(() {});
-            } else {
-              if (!context.mounted) return;
-              AnimatedList.of(context).removeItem(
-                  oldIndex,
+            final updatedItem = await showDialog<ShoppingItem>(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return ProductDialog(
+                    item: widget.item,
+                    title: 'Edit Item',
+                  );
+                });
+            if (updatedItem != null) {
+              int newIndex = await stateNotifier.updateItem(updatedItem);
+              if (currentIndex != newIndex) {
+                if (!context.mounted) return;
+                AnimatedList.of(context).removeItem(
+                  currentIndex,
                   (context, animation) => ProductCard(
-                        item: oldItem,
-                        animation: animation,
-                        isDummy: true,
-                      ));
-              AnimatedList.of(context).insertItem(newIndex);
+                    item: oldItem,
+                    animation: animation,
+                    isDummy: true,
+                  ),
+                  duration: Duration(milliseconds: _animationDuration),
+                );
+                AnimatedList.of(context).insertItem(
+                  newIndex,
+                  duration: Duration(milliseconds: _animationDuration),
+                );
+              }
             }
           },
-        ),
-        title: FittedBox(
-          fit: BoxFit.scaleDown,
-          alignment: Alignment.centerLeft,
-          child: widget.item.name != ''
-              ? Text(widget.item.name)
-              : const Text('Product'),
-        ),
-        subtitle: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                '${currencyFormatter(widget.item.price)} × ${quantityFormatter(widget.item.quantity)}',
-                textAlign: TextAlign.start,
-                softWrap: false,
-                overflow: TextOverflow.ellipsis,
-              ),
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 0,
+              horizontal: 6,
             ),
-            const SizedBox(width: 4),
-            Expanded(
-              child: Text(
-                currencyFormatter(widget.item.total),
-                textAlign: TextAlign.end,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+            dense: true,
+            leading: Checkbox(
+              value: widget.item.isBought,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              onChanged: (value) async {
+                widget.item.isBought = value!;
+                final oldItem = widget.item;
+                final newIndex = await stateNotifier.updateItem(widget.item);
+                if (currentIndex != newIndex) {
+                  if (!context.mounted) return;
+                  AnimatedList.of(context).removeItem(
+                    currentIndex,
+                    (context, animation) => ProductCard(
+                      item: oldItem,
+                      animation: animation,
+                      isDummy: true,
+                    ),
+                    duration: Duration(milliseconds: _animationDuration),
+                  );
+                  AnimatedList.of(context).insertItem(
+                    newIndex,
+                    duration: Duration(milliseconds: _animationDuration),
+                  );
+                }
+              },
+            ),
+            title: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: widget.item.name != ''
+                  ? Text(
+                      widget.item.name,
+                      style: const TextStyle(fontSize: 16),
+                    )
+                  : const Text('Product'),
+            ),
+            subtitle: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    '${currencyFormatter(widget.item.price)} × ${quantityFormatter(widget.item.quantity)}',
+                    textAlign: TextAlign.start,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                softWrap: false,
-                overflow: TextOverflow.ellipsis,
-              ),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    currencyFormatter(widget.item.total),
+                    textAlign: TextAlign.end,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                onPressed: !widget.isDummy
-                    ? () {
-                        stateNotifier.deleteItem(widget.item.uuid);
-                        AnimatedList.of(context).removeItem(
-                          shoppingItems.indexOf(widget.item),
-                          (context, animation) => ProductCard(
-                            item: widget.item,
-                            animation: animation,
-                            isDummy: true,
-                          ),
-                        );
-                      }
-                    : null,
-                icon: const Icon(Icons.delete),
+            trailing: IconButton(
+              onPressed: () {
+                final removedItem = widget.item;
+                stateNotifier.deleteItem(widget.item.uuid);
+                AnimatedList.of(context).removeItem(
+                  shoppingItems.indexOf(widget.item),
+                  (context, animation) => ProductCard(
+                    item: removedItem,
+                    animation: animation,
+                    isDummy: true,
+                  ),
+                  duration: Duration(milliseconds: _animationDuration),
+                );
+              },
+              icon: const Icon(
+                Icons.delete,
                 color: Colors.red,
               ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.favorite_border),
-                color: Colors.purple,
-              ),
-              IconButton(
-                onPressed: !widget.isDummy
-                    ? () async {
-                        final updatedItem = await showDialog<ShoppingItem>(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) {
-                              return ProductDialog(
-                                item: widget.item,
-                                title: 'Edit Item',
-                              );
-                            });
-                        if (updatedItem != null) {
-                          int oldIndex = shoppingItems.indexOf(widget.item);
-                          int newIndex =
-                              await stateNotifier.updateItem(updatedItem);
-                          if (oldIndex != newIndex) {
-                            if (!context.mounted) return;
-                            AnimatedList.of(context).removeItem(
-                                oldIndex,
-                                (context, animation) => ProductCard(
-                                      item: widget.item,
-                                      animation: animation,
-                                      isDummy: true,
-                                    ));
-                            AnimatedList.of(context).insertItem(newIndex);
-                          }
-                        }
-                      }
-                    : null,
-                icon: const Icon(Icons.edit),
-                color: Colors.blue,
-              ),
-            ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
