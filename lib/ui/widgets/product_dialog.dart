@@ -53,8 +53,8 @@ class _ProductDialogState extends State<ProductDialog> {
     } else if (currencyFormatter(value) == '0.00') {
       return '';
     } else if (currencyFormatter(value).substring(
-            currencyFormatter(value).length - 3,
-            currencyFormatter(value).length) ==
+        currencyFormatter(value).length - 3,
+        currencyFormatter(value).length) ==
         '.00') {
       return currencyFormatter(value)
           .substring(0, currencyFormatter(value).length - 3);
@@ -90,7 +90,7 @@ class _ProductDialogState extends State<ProductDialog> {
                     maxLines: 1,
                     maxLength: 20,
                     decoration:
-                        const InputDecoration(labelText: 'Product name'),
+                    const InputDecoration(labelText: 'Product name'),
                     initialValue: editedItem.name,
                     onChanged: (value) {
                       editedItem.name = value.trim();
@@ -121,7 +121,7 @@ class _ProductDialogState extends State<ProductDialog> {
                           ),
                           validator: (value) => _validateNumberInput(value!),
                           initialValue:
-                              _normalizedNumericalValue(editedItem.price),
+                          _normalizedNumericalValue(editedItem.price),
                           keyboardType: const TextInputType.numberWithOptions(
                               decimal: true),
                           inputFormatters: [
@@ -148,7 +148,7 @@ class _ProductDialogState extends State<ProductDialog> {
                           ),
                           validator: (value) => _validateNumberInput(value!),
                           initialValue:
-                              _normalizedNumericalValue(editedItem.quantity),
+                          _normalizedNumericalValue(editedItem.quantity),
                           keyboardType: const TextInputType.numberWithOptions(
                             decimal: true,
 

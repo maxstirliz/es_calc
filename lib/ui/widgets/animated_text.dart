@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class AnimatedText extends StatefulWidget {
   AnimatedText(
-    this.text, {
-    super.key,
-    this.style,
-    this.textAlign,
-  });
+      this.text, {
+        super.key,
+        this.style,
+        this.textAlign,
+      });
 
   final String text;
   TextStyle? style;

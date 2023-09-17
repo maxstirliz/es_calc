@@ -19,7 +19,7 @@ class ShoppingListNotifier extends StateNotifier<List<ShoppingItem>> {
   Future<int> addItem(ShoppingItem item) async {
     await shoppingListRepository.addItem(item);
     final list = await shoppingListRepository.getItems();
-    final newItem =list.where((i) => i.uuid == item.uuid).toList();
+    final newItem = list.where((i) => i.uuid == item.uuid).toList();
     state = [...list];
     return list.indexOf(newItem[0]);
   }

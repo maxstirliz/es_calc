@@ -1,6 +1,7 @@
 import 'package:es_calc/providers/shopping_list_provider.dart';
 import 'package:es_calc/ui/widgets/animated_text.dart';
 import 'package:es_calc/ui/widgets/product_card.dart';
+import 'package:es_calc/ui/widgets/slidable_product_card.dart';
 import 'package:es_calc/utils/calculation_utils.dart';
 import 'package:es_calc/utils/formatter.dart';
 import 'package:flutter/material.dart';
@@ -69,16 +70,25 @@ class _ShoppingListScreenState extends ConsumerState<ShoppingCartScreen> {
                       ),
                       const SizedBox(height: 16),
                       Expanded(
-                        child: AnimatedList(
-                          key: widget.listKey,
-                          initialItemCount: shoppingItems.length,
-                          itemBuilder: (context, i, animation) {
-                            return ProductCard(
-                              item: shoppingItems[i],
-                              animation: animation,
-                            );
+                        child: ListView.builder(
+                          itemCount: shoppingItems.length,
+                          itemBuilder: (context, index) {
+                            return SlidableProductCard(
+                                item: shoppingItems[index]);
                           },
                         ),
+
+
+                        // child: AnimatedList(
+                        //   key: widget.listKey,
+                        //   initialItemCount: shoppingItems.length,
+                        //   itemBuilder: (context, i, animation) {
+                        //     return ProductCard(
+                        //       item: shoppingItems[i],
+                        //       animation: animation,
+                        //     );
+                        //   },
+                        // ),
                       ),
                     ],
                   );
